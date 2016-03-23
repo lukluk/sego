@@ -1,0 +1,26 @@
+{{#if error}}
+  <h1 class="error">{{error}}</h1>
+{{/if}}
+
+{{#each users}}
+  <strong>{{username}}</strong>
+{{/each}}
+
+<script type="server">
+  var data={}
+  sego.mysql_connection({
+    host:'127.0.0.1',
+    user:'root',
+    password:'',
+    database:'demo'
+  })
+  if(!sego.mysql){
+    data.error="cannot connect database"
+    sego.render(data)
+    return false
+  }
+  sego.mysql.query('select * from users',function(err,rows,fields){
+    sego.mysql_disconnect()
+    sego.render({error:err,users:rows})
+  })
+</script>
